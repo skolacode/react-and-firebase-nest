@@ -1,5 +1,5 @@
-import {useState} from 'react'
-import './App.css';
+import {useEffect, useState} from 'react'
+import './styles/App.css'
 
 // ES6
 // HOOK
@@ -20,7 +20,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className='container'>
       <p>My Name is: {name}</p>
       <input 
         type="text" 
