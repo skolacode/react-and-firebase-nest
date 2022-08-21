@@ -1,5 +1,6 @@
+import { Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import {useState} from 'react'
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { routeNames } from '../routes/routeNames';
 import '../styles/App.css'
 
@@ -39,6 +40,21 @@ const LandingPage = () => {
 
   return (
     <div className='container'>
+
+      <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+        <List>
+          {
+            [1,2,3].map((each) => (
+              <ListItem key={each} disablePadding>
+                <ListItemButton>
+                  <ListItemText primary="Inbox" />
+                </ListItemButton>
+              </ListItem>
+            ))
+          }
+        </List>
+      </Box>
+
       <p>My Name is: {name}</p>
       <input
         type="text" 
@@ -54,8 +70,6 @@ const LandingPage = () => {
         id="desc" 
         onChange={updateDescState} 
       />
-
-        <Link to={routeNames.HOME}>Link Home</Link>
 
         <button 
           onClick={navigateToHome}
