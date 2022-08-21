@@ -16,31 +16,49 @@ const LandingPage = () => {
 
   const navigate = useNavigate();
 
-  const [name, setName] = useState("hi");
+  const [name, setName] = useState("");
 
   const upddateNameState = (element) => {
     const valueName = element.target.value
     setName(valueName)
   }
 
+  const [desc, setDesc] = useState("");
+
+  const updateDescState = (element) => {
+    const valueDesc = element.target.value
+    setDesc(valueDesc)
+  }
+
+  const navigateToHome = () => { 
+    navigate(routeNames.HOME, {state: {
+      firstName: name,
+      desc: desc
+    }}) 
+  }
+
   return (
     <div className='container'>
       <p>My Name is: {name}</p>
-      <input 
+      <input
         type="text" 
         name="name" 
         id="name" 
-        onChange={upddateNameState} />
+        onChange={upddateNameState} 
+      />
+
+      <p>{desc}</p>
+      <input
+        type="text" 
+        name="desc" 
+        id="desc" 
+        onChange={updateDescState} 
+      />
 
         <Link to={routeNames.HOME}>Link Home</Link>
 
         <button 
-          onClick={() => { 
-            navigate(routeNames.HOME, {state: {
-              firstName: 'Anis',
-              desc: 'Awesome'
-            }}) 
-          }} 
+          onClick={navigateToHome}
         >
           Home
         </button>

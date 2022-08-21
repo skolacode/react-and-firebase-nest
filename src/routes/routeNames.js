@@ -1,4 +1,5 @@
 export const routeNames = {
   LANDING_PAGE: '/',
-  HOME: 'home'
+  HOME: 'home',
+  HOME_WITH_ID: 'home/:newID'
 }
