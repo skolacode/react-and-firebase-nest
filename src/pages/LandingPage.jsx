@@ -34,7 +34,16 @@ const LandingPage = () => {
 
         <Link to={routeNames.HOME}>Link Home</Link>
 
-        <button onClick={() => { navigate(routeNames.HOME) }} >Home</button>
+        <button 
+          onClick={() => { 
+            navigate(routeNames.HOME, {state: {
+              firstName: 'Anis',
+              desc: 'Awesome'
+            }}) 
+          }} 
+        >
+          Home
+        </button>
     </div>
   )
 }
