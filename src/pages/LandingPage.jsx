@@ -1,81 +1,78 @@
-import { Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
-import {useState} from 'react'
-import { useNavigate } from "react-router-dom";
-import { routeNames } from '../routes/routeNames';
-import '../styles/App.css'
+import { useState } from 'react';
+import { Button, TextField } from '@mui/material';
 
-// ES6
-// HOOK
-
-// Mutate
-
-// let firstName = "annis"
-// setFirstName("burhan")
-// console.log(firstName) -> burhan
+import '../styles/LandingPageStyle.css'
 
 const LandingPage = () => {
 
-  const navigate = useNavigate();
+  // TODO
+  /**
+   * 1. Create a input box - DONE
+   * 2. Create a save button - DONE
+   * 3. After click save, we need to save the record in a todo state
+   * 
+   * -- version v.0.2
+   * a. Have a edit, delete and complete option
+   * 
+   * -- version v.0.3
+   * a. Deleted and completed record will be moved to another list
+   */
 
-  const [name, setName] = useState("");
 
-  const upddateNameState = (element) => {
-    const valueName = element.target.value
-    setName(valueName)
-  }
+  // Save a current todo that is typed
+  const [todo, setTodo] = useState("")
 
-  const [desc, setDesc] = useState("");
+  /**
+   * todoList design = 
+   * [
+   *   {
+   *     content: string = '',
+   *     status: boolean = 1|2|3
+   *   }
+   * ]
+   * 
+   * STATUS = {
+   *   ACTIVE: 1,
+   *   completed: 2,
+   *   deleted: 3,
+   * }
+   * 
+   * e.g: 
+   * [
+   *  {
+   *  content: "i need to buy anis a gift",
+   *  status: STATUS.ACTIVE
+   *  }
+   * ]
+   */
+  const [todoList, setTodoList] = useState([])
 
-  const updateDescState = (element) => {
-    const valueDesc = element.target.value
-    setDesc(valueDesc)
-  }
 
-  const navigateToHome = () => { 
-    navigate(routeNames.HOME, {state: {
-      firstName: name,
-      desc: desc
-    }}) 
-  }
 
   return (
     <div className='container'>
 
-      <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        <List>
-          {
-            [1,2,3].map((each) => (
-              <ListItem key={each} disablePadding>
-                <ListItemButton>
-                  <ListItemText primary="Inbox" />
-                </ListItemButton>
-              </ListItem>
-            ))
-          }
-        </List>
-      </Box>
-
-      <p>My Name is: {name}</p>
-      <input
-        type="text" 
-        name="name" 
-        id="name" 
-        onChange={upddateNameState} 
-      />
-
-      <p>{desc}</p>
-      <input
-        type="text" 
-        name="desc" 
-        id="desc" 
-        onChange={updateDescState} 
-      />
-
-        <button 
-          onClick={navigateToHome}
+      <div>
+        <TextField 
+          id="outlined-basic" 
+          label="Todo" 
+          variant="outlined"
+          placeholder='Enter your todo here...'
+          sx={{
+            width: 400,
+          }}
+        />
+        <Button 
+          variant="contained" 
+          size="large"
+          sx={{
+            height: 55,
+            marginLeft: 2
+          }}
         >
-          Home
-        </button>
+          SAVE
+        </Button>
+      </div>
     </div>
   )
 }
