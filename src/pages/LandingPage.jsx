@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 
 import '../styles/LandingPageStyle.css'
 
@@ -9,8 +9,8 @@ const LandingPage = () => {
   /**
    * 1. Create a input box - DONE
    * 2. Create a save button - DONE
-   * 3. After click save, we need to save the record in a todo state
-   * 4. Display the saved todos
+   * 3. After click save, we need to save the record in a todo state - DONE
+   * 4. Display the saved todos - DONE
    * 
    * -- version v.0.2
    * a. Have a edit, delete and complete option
@@ -42,6 +42,7 @@ const LandingPage = () => {
    * e.g: 
    * [
    *  {
+   *   id: "asd1221asdasd",
    *  content: "i need to buy anis a gift",
    *  status: STATUS.ACTIVE
    *  }
@@ -51,13 +52,15 @@ const LandingPage = () => {
 
   const saveTheTodo = () => {
 
-    // DEEP clone
-    const clonedArr = [...todoList]
-
-    clonedArr.push(todo)
-
-    setTodoList(clonedArr)
-    setTodo("")
+    if(todo !== '') {
+      // DEEP clone
+      const clonedArr = [...todoList]
+      
+      clonedArr.push(todo)
+      
+      setTodoList(clonedArr)
+      setTodo("")
+    }
   }
 
   return (
@@ -88,13 +91,22 @@ const LandingPage = () => {
         </Button>
       </div>
 
-      <div>
-        {
-          todoList.map((eachTodo, key) => (
-            <p key={key}>{eachTodo}</p>
-          ))
-        }
-      </div>
+      {
+        todoList.length > 0 && 
+        <div className='todoListContainer'>
+          <List style={{ backgroundColor: 'white' }}>
+            {
+              todoList.map((eachTodo, key) => (
+                <ListItem className='todoItemsContainer' key={key} disablePadding>
+                  <ListItemButton>
+                    <ListItemText primary={eachTodo} />
+                  </ListItemButton>
+                </ListItem>
+              ))
+            }
+          </List>
+        </div>
+      }
     </div>
   )
 }
