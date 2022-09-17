@@ -18,7 +18,7 @@ const LandingPage = () => {
    * 4. Display the saved todos - DONE
    * 
    * -- version v.0.2
-   * a. Have a edit, delete and complete option
+   * a. Have a edit, delete and complete option - DONE
    * 
    * -- version v.0.3
    * a. Deleted and completed record will be moved to another list
@@ -95,26 +95,42 @@ const LandingPage = () => {
 
     if(getTodo) {
       getTodo.status = TODO_STATUS.COMPLETED
+      setTodoList(clonedArr)
     }
-
-    setTodoList(clonedArr)
   }
 
-    /**
+  /**
    * 
    * @param string id // the id field of the todo
    */
-     const deleteTheTodo = (id) => {
+  const deleteTheTodo = (id) => {
 
-      const clonedArr = [...todoList]
-      const getTodo = clonedArr.find((eachTodo) => eachTodo.id === id)
-  
-      if(getTodo) {
-        getTodo.status = TODO_STATUS.DELETED
-      }
-  
+    const clonedArr = [...todoList]
+    const getTodo = clonedArr.find((eachTodo) => eachTodo.id === id)
+
+    if(getTodo) {
+      getTodo.status = TODO_STATUS.DELETED
       setTodoList(clonedArr)
     }
+  }
+
+  /**
+   * 
+   * @param object todoObj | this will contain the entier object of todo
+   */
+  const editTodo = (todoObj) => {
+
+    setTodo(todoObj.content)
+
+    const clonedArr = [...todoList]
+    const getTodoIndex = clonedArr.findIndex((eachTodo) => eachTodo.id === todoObj.id)
+
+    if(getTodoIndex !== -1) {
+      clonedArr.splice(getTodoIndex, 1)
+      setTodoList(clonedArr)
+    }
+
+  }
 
   return (
     <div className='container'>
@@ -168,7 +184,7 @@ const LandingPage = () => {
                     disablePadding
                     disabled={eachTodo.status === TODO_STATUS.DELETED ? true : false}
                   >
-                    <ListItemButton onClick={() => alert('i clicked as well')}>
+                    <ListItemButton onClick={() => editTodo(eachTodo)}>
                       <ListItemText primary={eachTodo.content} />
                     </ListItemButton>
 
