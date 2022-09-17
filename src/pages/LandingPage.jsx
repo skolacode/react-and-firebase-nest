@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button, TextField, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 
 import '../styles/LandingPageStyle.css'
+import { TODO_STATUS } from '../constants/todoStatus';
 
 const LandingPage = () => {
 
@@ -24,7 +25,7 @@ const LandingPage = () => {
   const [todo, setTodo] = useState("")
 
   /**
-   * todoList design = 
+   * todoList design (array of object) = 
    * [
    *   {
    *     id: alphanumeric = 'asadsad13122' 
@@ -57,6 +58,15 @@ const LandingPage = () => {
       const clonedArr = [...todoList]
       
       clonedArr.push(todo)
+
+      /**
+       * TODO
+       * 1. When get and string
+       * 2. auto append the status and the id
+       * 3. how to get the id? 
+       * 4. what status to append? ANS = ACTIVE (1)
+       * 
+       */
       
       setTodoList(clonedArr)
       setTodo("")
