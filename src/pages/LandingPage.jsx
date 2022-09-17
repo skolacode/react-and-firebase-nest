@@ -82,6 +82,38 @@ const LandingPage = () => {
     }
   }
 
+  /**
+   * 
+   * @param string id // the id field of the todo
+   */
+  const completeTheTodo = (id) => {
+
+    const clonedArr = [...todoList]
+    const getTodo = clonedArr.find((eachTodo) => eachTodo.id === id)
+
+    if(getTodo) {
+      getTodo.status = TODO_STATUS.COMPLETED
+    }
+
+    setTodoList(clonedArr)
+  }
+
+    /**
+   * 
+   * @param string id // the id field of the todo
+   */
+     const deleteTheTodo = (id) => {
+
+      const clonedArr = [...todoList]
+      const getTodo = clonedArr.find((eachTodo) => eachTodo.id === id)
+  
+      if(getTodo) {
+        getTodo.status = TODO_STATUS.DELETED
+      }
+  
+      setTodoList(clonedArr)
+    }
+
   return (
     <div className='container'>
 
@@ -115,13 +147,41 @@ const LandingPage = () => {
         <div className='todoListContainer'>
           <List style={{ backgroundColor: 'white' }}>
             {
-              todoList.map((eachTodo, key) => (
-                <ListItem style={{ marginBottom: 5 }} className='todoItemsContainer' key={key} disablePadding>
-                  <ListItemButton>
-                    <ListItemText primary={eachTodo.content} />
-                  </ListItemButton>
-                </ListItem>
-              ))
+              todoList.map((eachTodo, key) => {
+
+                let defaultStyle = { marginBottom: 5, paddingRight: 5}
+
+                if(eachTodo.status === TODO_STATUS.COMPLETED) {
+                  defaultStyle = { ...defaultStyle, backgroundColor: 'rgb(206, 216, 95)', color: 'white' }
+                }
+                else if(eachTodo.status === TODO_STATUS.DELETED) {
+                  defaultStyle = { ...defaultStyle, backgroundColor: 'lightgrey', color: 'white' }
+                }
+
+                return (
+                  <ListItem 
+                    style={defaultStyle}
+                    className='todoItemsContainer'
+                    key={key}
+                    disablePadding
+                    disabled={eachTodo.status === TODO_STATUS.DELETED ? true : false}
+                  >
+                    <ListItemButton onClick={() => alert('i clicked as well')}>
+                      <ListItemText primary={eachTodo.content} />
+                    </ListItemButton>
+
+                    {
+                      eachTodo.status === TODO_STATUS.ACTIVE &&
+                        <Button size="small" color="success" onClick={() => completeTheTodo(eachTodo.id)}>Done</Button>
+                    }
+
+                    {
+                      eachTodo.status !== TODO_STATUS.DELETED &&
+                        <Button size="small" color="error" onClick={() => deleteTheTodo(eachTodo.id)}>Delete</Button>
+                    }
+                  </ListItem>
+                )
+              })
             }
           </List>
         </div>
@@ -131,3 +191,12 @@ const LandingPage = () => {
 }
 
 export default LandingPage;
+
+
+/**
+ * Button yang available:
+ * status
+ * 1. completed - Delete
+ * 2. Active - DONE | Delete
+ * 3. deleted - 
+ */
