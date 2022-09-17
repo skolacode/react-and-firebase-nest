@@ -97,7 +97,7 @@ const LandingPage = () => {
           <List style={{ backgroundColor: 'white' }}>
             {
               todoList.map((eachTodo, key) => (
-                <ListItem className='todoItemsContainer' key={key} disablePadding>
+                <ListItem style={{ marginBottom: 5 }} className='todoItemsContainer' key={key} disablePadding>
                   <ListItemButton>
                     <ListItemText primary={eachTodo} />
                   </ListItemButton>
