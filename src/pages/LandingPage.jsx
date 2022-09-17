@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Button, TextField, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid';
+
+import { TODO_STATUS } from '../constants/todoStatus';
 
 import '../styles/LandingPageStyle.css'
-import { TODO_STATUS } from '../constants/todoStatus';
 
 const LandingPage = () => {
 
@@ -57,13 +59,20 @@ const LandingPage = () => {
       // DEEP clone
       const clonedArr = [...todoList]
       
-      clonedArr.push(todo)
+      // transform before save into array
+      const transformedTodo = {
+        id: uuidv4(),
+        content: todo,
+        status: TODO_STATUS.ACTIVE
+      }
+
+      clonedArr.push(transformedTodo)
 
       /**
        * TODO
        * 1. When get and string
        * 2. auto append the status and the id
-       * 3. how to get the id? 
+       * 3. how to get the id? ANS = use UUID library to get unique id
        * 4. what status to append? ANS = ACTIVE (1)
        * 
        */
@@ -109,7 +118,7 @@ const LandingPage = () => {
               todoList.map((eachTodo, key) => (
                 <ListItem style={{ marginBottom: 5 }} className='todoItemsContainer' key={key} disablePadding>
                   <ListItemButton>
-                    <ListItemText primary={eachTodo} />
+                    <ListItemText primary={eachTodo.content} />
                   </ListItemButton>
                 </ListItem>
               ))
