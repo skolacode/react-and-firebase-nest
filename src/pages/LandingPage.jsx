@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Button, TextField, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 import { TODO_STATUS } from '../constants/todoStatus';
 
@@ -172,12 +174,16 @@ const LandingPage = () => {
 
                     {
                       eachTodo.status === TODO_STATUS.ACTIVE &&
-                        <Button size="small" color="success" onClick={() => completeTheTodo(eachTodo.id)}>Done</Button>
+                        <Button size="small" color="success" onClick={() => completeTheTodo(eachTodo.id)}>
+                          <CheckCircleOutlineIcon />
+                        </Button>
                     }
 
                     {
                       eachTodo.status !== TODO_STATUS.DELETED &&
-                        <Button size="small" color="error" onClick={() => deleteTheTodo(eachTodo.id)}>Delete</Button>
+                        <Button size="small" color="error" onClick={() => deleteTheTodo(eachTodo.id)}>
+                          <RemoveCircleIcon />
+                        </Button>
                     }
                   </ListItem>
                 )
