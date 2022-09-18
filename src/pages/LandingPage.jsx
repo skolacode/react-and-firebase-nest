@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { Button, TextField, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
+import { Button, TextField} from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 import { TODO_STATUS } from '../constants/todoStatus';
 
 import '../styles/LandingPageStyle.css'
+import { TodoList } from '../components/TodoList';
 
 const LandingPage = () => {
 
@@ -188,115 +187,22 @@ const LandingPage = () => {
         </Button>
       </div>
 
-      {
-        todoList.length > 0 && 
-        <div className='todoListContainer'>
-          <List style={{ backgroundColor: 'white' }}>
-            {
-              todoList.map((eachTodo, key) => {
+      <TodoList 
+        todosArr={todoList} 
+        editTodo={editTodo} 
+        completeTheTodo={completeTheTodo} 
+        deleteTheTodo={deleteTheTodo} 
+      />
 
-                let defaultStyle = { marginBottom: 5, paddingRight: 5}
-
-                if(eachTodo.status === TODO_STATUS.COMPLETED) {
-                  defaultStyle = { ...defaultStyle, backgroundColor: 'rgb(206, 216, 95)', color: 'white' }
-                }
-                else if(eachTodo.status === TODO_STATUS.DELETED) {
-                  defaultStyle = { ...defaultStyle, backgroundColor: 'lightgrey', color: 'white' }
-                }
-
-                return (
-                  <ListItem 
-                    style={defaultStyle}
-                    className='todoItemsContainer'
-                    key={key}
-                    disablePadding
-                    disabled={eachTodo.status === TODO_STATUS.DELETED ? true : false}
-                  >
-                    <ListItemButton onClick={() => editTodo(eachTodo)}>
-                      <ListItemText primary={eachTodo.content} />
-                    </ListItemButton>
-
-                    {
-                      eachTodo.status === TODO_STATUS.ACTIVE &&
-                        <Button size="small" color="success" onClick={() => completeTheTodo(eachTodo.id)}>
-                          <CheckCircleOutlineIcon />
-                        </Button>
-                    }
-
-                    {
-                      eachTodo.status !== TODO_STATUS.DELETED &&
-                        <Button size="small" color="error" onClick={() => deleteTheTodo(eachTodo.id)}>
-                          <RemoveCircleIcon />
-                        </Button>
-                    }
-                  </ListItem>
-                )
-              })
-            }
-          </List>
-        </div>
-      }
-
-      {
-        completedTodoList.length > 0 && 
-        <div style={{ marginTop: 20 }}>
-          <Typography>Completed</Typography>
-          <List className='todoListContainer'>
-            {
-              completedTodoList.map((eachTodo, key) => {
-
-                let defaultStyle = { marginBottom: 5, paddingRight: 5}
-
-                if(eachTodo.status === TODO_STATUS.COMPLETED) {
-                  defaultStyle = { ...defaultStyle, backgroundColor: 'rgb(206, 216, 95)', color: 'white' }
-                }
-                else if(eachTodo.status === TODO_STATUS.DELETED) {
-                  defaultStyle = { ...defaultStyle, backgroundColor: 'lightgrey', color: 'white' }
-                }
-
-                return (
-                  <ListItem 
-                    style={defaultStyle}
-                    className='todoItemsContainer'
-                    key={key}
-                    disablePadding
-                    disabled={eachTodo.status === TODO_STATUS.DELETED ? true : false}
-                  >
-                    <ListItemButton onClick={() => editTodo(eachTodo)}>
-                      <ListItemText primary={eachTodo.content} />
-                    </ListItemButton>
-
-                    {
-                      eachTodo.status === TODO_STATUS.ACTIVE &&
-                        <Button size="small" color="success" onClick={() => completeTheTodo(eachTodo.id)}>
-                          <CheckCircleOutlineIcon />
-                        </Button>
-                    }
-
-                    {
-                      eachTodo.status !== TODO_STATUS.DELETED &&
-                        <Button size="small" color="error" onClick={() => deleteTheTodo(eachTodo.id)}>
-                          <RemoveCircleIcon />
-                        </Button>
-                    }
-                  </ListItem>
-                )
-              })
-            }
-          </List>
-        </div>
-      }
+      <TodoList 
+        todosArr={completedTodoList} 
+        editTodo={editTodo} 
+        completeTheTodo={completeTheTodo} 
+        deleteTheTodo={deleteTheTodo} 
+        title="Completed"
+      />
     </div>
   )
 }
 
 export default LandingPage;
-
-
-/**
- * Button yang available:
- * status
- * 1. completed - Delete
- * 2. Active - DONE | Delete
- * 3. deleted - 
- */
