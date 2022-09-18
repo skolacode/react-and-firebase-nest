@@ -123,12 +123,34 @@ const LandingPage = () => {
    */
   const deleteTheTodo = (id) => {
 
-    const clonedArr = [...todoList]
-    const getTodo = clonedArr.find((eachTodo) => eachTodo.id === id)
+    const parentTodoList = [...todoList]
+    const completedArr = [...completedTodoList]
+    const allTodosArr = parentTodoList.concat(completedArr)
 
-    if(getTodo) {
-      getTodo.status = TODO_STATUS.DELETED
-      setTodoList(clonedArr)
+    const getTodoIndex = allTodosArr.findIndex((eachTodo) => eachTodo.id === id)
+
+    if(getTodoIndex !== -1) {
+
+      const deletedArr = [...deletedTodoList]
+
+      deletedArr.push({
+        ...allTodosArr[getTodoIndex],
+        status: TODO_STATUS.DELETED
+      })
+
+      setDeletedTodoList(deletedArr)
+
+      const todoListLength = parentTodoList.length
+        
+      if(getTodoIndex > (todoListLength-1)) {
+        const getIndex = getTodoIndex - todoListLength
+        completedArr.splice(getIndex, 1)
+        setCompletedTodoList(completedArr)
+      }
+      else {
+        parentTodoList.splice(getTodoIndex, 1)
+        setTodoList(parentTodoList)
+      }
     }
   }
 
@@ -200,6 +222,15 @@ const LandingPage = () => {
         completeTheTodo={completeTheTodo} 
         deleteTheTodo={deleteTheTodo} 
         title="Completed"
+      />
+
+
+      <TodoList 
+        todosArr={deletedTodoList}
+        editTodo={editTodo} 
+        completeTheTodo={completeTheTodo} 
+        deleteTheTodo={deleteTheTodo} 
+        title="Deleted"
       />
     </div>
   )
