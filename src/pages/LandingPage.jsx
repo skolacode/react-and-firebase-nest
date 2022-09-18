@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, TextField, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Button, TextField, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -54,6 +54,9 @@ const LandingPage = () => {
    * ]
    */
   const [todoList, setTodoList] = useState([])
+  const [completedTodoList, setCompletedTodoList] = useState([])
+  const [deletedTodoList, setDeletedTodoList] = useState([])
+  
 
   const saveTheTodo = () => {
 
@@ -91,10 +94,26 @@ const LandingPage = () => {
   const completeTheTodo = (id) => {
 
     const clonedArr = [...todoList]
-    const getTodo = clonedArr.find((eachTodo) => eachTodo.id === id)
+    
+    const getTodoIndex = clonedArr.findIndex((eachTodo) => eachTodo.id === id)
 
-    if(getTodo) {
-      getTodo.status = TODO_STATUS.COMPLETED
+    if(getTodoIndex !== -1) {
+
+      // deep clone the completed array
+      const cloneCompletedArr = [...completedTodoList]
+
+      // push a new record to completed array
+      cloneCompletedArr.push({
+        ...clonedArr[getTodoIndex],
+        status: TODO_STATUS.COMPLETED
+      })
+
+      // set completed array 
+      setCompletedTodoList(cloneCompletedArr)
+
+      // Remove from parent array
+      clonedArr.splice(getTodoIndex, 1)
+      // set the parent array with new array
       setTodoList(clonedArr)
     }
   }
@@ -175,6 +194,56 @@ const LandingPage = () => {
           <List style={{ backgroundColor: 'white' }}>
             {
               todoList.map((eachTodo, key) => {
+
+                let defaultStyle = { marginBottom: 5, paddingRight: 5}
+
+                if(eachTodo.status === TODO_STATUS.COMPLETED) {
+                  defaultStyle = { ...defaultStyle, backgroundColor: 'rgb(206, 216, 95)', color: 'white' }
+                }
+                else if(eachTodo.status === TODO_STATUS.DELETED) {
+                  defaultStyle = { ...defaultStyle, backgroundColor: 'lightgrey', color: 'white' }
+                }
+
+                return (
+                  <ListItem 
+                    style={defaultStyle}
+                    className='todoItemsContainer'
+                    key={key}
+                    disablePadding
+                    disabled={eachTodo.status === TODO_STATUS.DELETED ? true : false}
+                  >
+                    <ListItemButton onClick={() => editTodo(eachTodo)}>
+                      <ListItemText primary={eachTodo.content} />
+                    </ListItemButton>
+
+                    {
+                      eachTodo.status === TODO_STATUS.ACTIVE &&
+                        <Button size="small" color="success" onClick={() => completeTheTodo(eachTodo.id)}>
+                          <CheckCircleOutlineIcon />
+                        </Button>
+                    }
+
+                    {
+                      eachTodo.status !== TODO_STATUS.DELETED &&
+                        <Button size="small" color="error" onClick={() => deleteTheTodo(eachTodo.id)}>
+                          <RemoveCircleIcon />
+                        </Button>
+                    }
+                  </ListItem>
+                )
+              })
+            }
+          </List>
+        </div>
+      }
+
+      {
+        completedTodoList.length > 0 && 
+        <div style={{ marginTop: 20 }}>
+          <Typography>Completed</Typography>
+          <List className='todoListContainer'>
+            {
+              completedTodoList.map((eachTodo, key) => {
 
                 let defaultStyle = { marginBottom: 5, paddingRight: 5}
 
