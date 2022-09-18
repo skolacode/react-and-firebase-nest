@@ -21,7 +21,7 @@ const LandingPage = () => {
    * a. Have a edit, delete and complete option - DONE
    * 
    * -- version v.0.3
-   * a. Deleted and completed record will be moved to another list
+   * a. Deleted and completed record will be moved to another list (shareable component)
    */
 
 
@@ -132,6 +132,13 @@ const LandingPage = () => {
 
   }
 
+  const keydownTemp = (evt) => {
+
+    if(evt.key === "Enter") {
+      saveTheTodo()
+    }
+  }
+
   return (
     <div className='container'>
 
@@ -146,9 +153,11 @@ const LandingPage = () => {
           sx={{
             width: 400,
           }}
+          onKeyDownCapture={keydownTemp}
         />
         <Button 
           onClick={saveTheTodo}
+          
           variant="contained" 
           size="large"
           sx={{
