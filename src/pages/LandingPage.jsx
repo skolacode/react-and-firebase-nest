@@ -7,6 +7,9 @@ import { TODO_STATUS } from '../constants/todoStatus';
 import '../styles/LandingPageStyle.css'
 import { TodoList } from '../components/TodoList';
 
+import { setDoc, addDoc, collection } from "firebase/firestore"; 
+import { firestore } from '../initFirebase';
+
 const LandingPage = () => {
 
   // TODO
@@ -179,6 +182,40 @@ const LandingPage = () => {
     }
   }
 
+  /**
+   * async
+   * ===
+   * 1. code run line by line
+   * 2. when have aysn function
+   * 3. line 1 have aysnc function
+   *     a. async nature adalah it won't complete instant
+   *     b. it will take time to complete the process
+   * 4. it will run line num 2 immediately 
+   * 5. in order to run a 2nd line after async complete, we need to put await
+   * 
+   * non-async
+   * ===
+   * 1. run process and return value immediately
+   */
+
+  const saveToFB = async () => {
+
+    // Add a new document in collection "cities"
+    // await setDoc(doc(firestore, "cities", "la"), {
+    //   name: "Los Angeles 2",
+    //   state: "CA",
+    //   country: "USA"
+    // });
+
+    await addDoc(collection(firestore, "cities"), {
+      name: "Los Angeles 2",
+      state: "CA",
+      country: "USA"
+    });
+
+    alert('i saved to FB')
+  }
+
   return (
     <div className='container'>
 
@@ -232,6 +269,19 @@ const LandingPage = () => {
         deleteTheTodo={deleteTheTodo} 
         title="Deleted"
       />
+
+      <Button 
+        onClick={saveToFB}
+        
+        variant="contained" 
+        size="large"
+        sx={{
+          height: 55,
+          marginLeft: 2
+        }}
+      >
+        Save to FB
+      </Button>
     </div>
   )
 }
