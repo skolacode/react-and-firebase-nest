@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, TextField} from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,7 +7,7 @@ import { TODO_STATUS } from '../constants/todoStatus';
 import '../styles/LandingPageStyle.css'
 import { TodoList } from '../components/TodoList';
 
-import { setDoc, addDoc, collection } from "firebase/firestore"; 
+import { setDoc, doc, getDocs, collection } from "firebase/firestore"; 
 import { firestore } from '../initFirebase';
 
 const LandingPage = () => {
@@ -85,6 +85,7 @@ const LandingPage = () => {
        */
       
       setTodoList(clonedArr)
+      saveToFB(transformedTodo)
       setTodo("")
     }
   }
@@ -198,23 +199,34 @@ const LandingPage = () => {
    * 1. run process and return value immediately
    */
 
-  const saveToFB = async () => {
+  const FIREBASE_COLLECTION = {
+    ANIS_TODO_APP: "anis-todo-app"
+  }
 
-    // Add a new document in collection "cities"
-    // await setDoc(doc(firestore, "cities", "la"), {
-    //   name: "Los Angeles 2",
-    //   state: "CA",
-    //   country: "USA"
-    // });
+  const saveToFB = async (todo) => {
 
-    await addDoc(collection(firestore, "cities"), {
-      name: "Los Angeles 2",
-      state: "CA",
-      country: "USA"
-    });
+    await setDoc(doc(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP, todo.id), todo);
 
     alert('i saved to FB')
   }
+
+  const getAllTodo = async () => {
+    
+    const querySnapshot = await getDocs(collection(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP));
+
+    const dataArr = []
+    
+    querySnapshot.forEach((doc) => {
+      dataArr.push(doc.data())
+    });
+
+    setTodoList(dataArr)
+  }
+
+  useEffect(() => {
+    // Get all the todo
+    getAllTodo()
+  }, [])
 
   return (
     <div className='container'>
@@ -269,19 +281,6 @@ const LandingPage = () => {
         deleteTheTodo={deleteTheTodo} 
         title="Deleted"
       />
-
-      <Button 
-        onClick={saveToFB}
-        
-        variant="contained" 
-        size="large"
-        sx={{
-          height: 55,
-          marginLeft: 2
-        }}
-      >
-        Save to FB
-      </Button>
     </div>
   )
 }
