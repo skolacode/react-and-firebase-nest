@@ -9,6 +9,7 @@ import { TodoList } from '../components/TodoList';
 
 import { setDoc, doc, getDocs, collection } from "firebase/firestore"; 
 import { firestore } from '../initFirebase';
+import { useCallback } from 'react';
 
 const LandingPage = () => {
 
@@ -210,7 +211,7 @@ const LandingPage = () => {
     alert('i saved to FB')
   }
 
-  const getAllTodo = async () => {
+  const getAllTodo = useCallback(async () => {
     
     const querySnapshot = await getDocs(collection(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP));
 
@@ -221,12 +222,12 @@ const LandingPage = () => {
     });
 
     setTodoList(dataArr)
-  }
+  }, [FIREBASE_COLLECTION.ANIS_TODO_APP])
 
   useEffect(() => {
     // Get all the todo
     getAllTodo()
-  }, [])
+  }, [getAllTodo])
 
   return (
     <div className='container'>
