@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, TextField} from '@mui/material';
+import { Button, TextField, useTheme} from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 
 import { TODO_STATUS } from '../constants/todoStatus';
@@ -12,6 +12,8 @@ import { firestore } from '../initFirebase';
 import { useCallback } from 'react';
 
 const LandingPage = () => {
+
+  const theme = useTheme();
 
   // TODO
   /**
@@ -247,12 +249,12 @@ const LandingPage = () => {
         />
         <Button 
           onClick={saveTheTodo}
-          
           variant="contained" 
           size="large"
           sx={{
             height: 55,
-            marginLeft: 2
+            marginLeft: 2,
+            backgroundColor: theme.palette.myColors.main
           }}
         >
           SAVE
