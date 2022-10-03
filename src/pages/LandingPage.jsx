@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Button, TextField, useTheme} from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,9 +7,13 @@ import { TODO_STATUS } from '../constants/todoStatus';
 import '../styles/LandingPageStyle.css'
 import { TodoList } from '../components/TodoList';
 
-import { setDoc, doc, getDocs, collection } from "firebase/firestore"; 
+import { setDoc, doc, getDocs, collection, onSnapshot } from "firebase/firestore"; 
 import { firestore } from '../initFirebase';
-import { useCallback } from 'react';
+
+const FIREBASE_COLLECTION = {
+  ANIS_TODO_APP: "anis-todo-app"
+}
+
 
 const LandingPage = () => {
 
@@ -61,7 +65,6 @@ const LandingPage = () => {
   const [todoList, setTodoList] = useState([])
   const [completedTodoList, setCompletedTodoList] = useState([])
   const [deletedTodoList, setDeletedTodoList] = useState([])
-  
 
   const saveTheTodo = () => {
 
@@ -201,11 +204,6 @@ const LandingPage = () => {
    * ===
    * 1. run process and return value immediately
    */
-
-  const FIREBASE_COLLECTION = {
-    ANIS_TODO_APP: "anis-todo-app"
-  }
-
   const saveToFB = async (todo) => {
 
     await setDoc(doc(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP, todo.id), todo);
@@ -213,7 +211,25 @@ const LandingPage = () => {
     alert('i saved to FB')
   }
 
+  const subscribeListener = useCallback((dataArr) => {
+    const unsub = onSnapshot(doc(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP, "301e53ae-bcac-43e0-9540-6837b0121242"), (doc) => {
+      console.log("Current data: ", doc.data());
+  
+      const data = doc.data()
+  
+      // Sebab kita tak boleh mutate original state - sebab tu kena clone
+      const cloneTodo = [...dataArr];
+  
+      const getIndex = cloneTodo.findIndex((each) => each.id === data.id)
+      cloneTodo[getIndex] = data
+  
+      setTodoList(cloneTodo);
+    });
+  }, [])
+
   const getAllTodo = useCallback(async () => {
+
+    console.log('called')
     
     const querySnapshot = await getDocs(collection(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP));
 
@@ -224,12 +240,16 @@ const LandingPage = () => {
     });
 
     setTodoList(dataArr)
-  }, [FIREBASE_COLLECTION.ANIS_TODO_APP])
+    subscribeListener(dataArr);
+
+
+  }, [subscribeListener])
 
   useEffect(() => {
     // Get all the todo
     getAllTodo()
   }, [getAllTodo])
+
 
   return (
     <div className='container'>
