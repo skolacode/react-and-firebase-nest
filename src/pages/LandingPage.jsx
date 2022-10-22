@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Button, TextField, useTheme} from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,8 +7,9 @@ import { TODO_STATUS } from '../constants/todoStatus';
 import '../styles/LandingPageStyle.css'
 import { TodoList } from '../components/TodoList';
 
-import { setDoc, doc, getDocs, collection, onSnapshot } from "firebase/firestore"; 
+import { setDoc, doc, getDocs, collection, onSnapshot, updateDoc, deleteDoc } from "firebase/firestore"; 
 import { firestore } from '../initFirebase';
+import { async } from '@firebase/util';
 
 const FIREBASE_COLLECTION = {
   ANIS_TODO_APP: "anis-todo-app"
@@ -96,11 +97,40 @@ const LandingPage = () => {
     }
   }
 
+  const updateTheTodoStatus = async (todoID, status) => {
+
+    console.log('id: ', todoID)
+
+    try {
+      const getDocByIDRef = doc(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP, todoID)
+
+      await updateDoc(getDocByIDRef, {
+        status: status
+      });
+
+      return true
+    } catch (err) {
+
+      console.log('err ', err)
+      return false
+    }
+  }
+
   /**
    * 
    * @param string id // the id field of the todo
    */
-  const completeTheTodo = (id) => {
+  const completeTheTodo = async (id) => {
+
+    try {
+      const getResp = updateTheTodoStatus(id, TODO_STATUS.COMPLETED)
+
+      if(getResp === false) {
+        alert('update to completed status failed')
+      }
+    } catch (err) {
+      
+    }
 
     const clonedArr = [...todoList]
     
@@ -131,13 +161,40 @@ const LandingPage = () => {
    * 
    * @param string id // the id field of the todo
    */
-  const deleteTheTodo = (id) => {
+  const deleteTheTodo = async (id) => {
+
+    console.log('id: ', id)
+
+    // Update the record in Firestore
+    /** 
+     * 1. We need the id to update the record in firestore
+     */
+
+    //  try {
+    //   const getResp = updateTheTodoStatus(id, TODO_STATUS.DELETED)
+
+    //   if(getResp === false) {
+    //     alert('update to completed status failed')
+    //   }
+    // } catch (err) {
+      
+    // }
+
+    try {
+      await deleteDoc(doc(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP, id));
+    }
+    catch (err) {
+
+    }
+
 
     const parentTodoList = [...todoList]
     const completedArr = [...completedTodoList]
     const allTodosArr = parentTodoList.concat(completedArr)
 
     const getTodoIndex = allTodosArr.findIndex((eachTodo) => eachTodo.id === id)
+
+
 
     if(getTodoIndex !== -1) {
 
@@ -212,19 +269,14 @@ const LandingPage = () => {
   }
 
   const subscribeListener = useCallback((dataArr) => {
-    const unsub = onSnapshot(doc(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP, "301e53ae-bcac-43e0-9540-6837b0121242"), (doc) => {
-      console.log("Current data: ", doc.data());
+    // onSnapshot(collection(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP), (snapshot) => {
+
+    //   console.log('doc: ', snapshot.docs.length)
+
+    //   const newArr = snapshot.docs.map((each) => each.data())
   
-      const data = doc.data()
-  
-      // Sebab kita tak boleh mutate original state - sebab tu kena clone
-      const cloneTodo = [...dataArr];
-  
-      const getIndex = cloneTodo.findIndex((each) => each.id === data.id)
-      cloneTodo[getIndex] = data
-  
-      setTodoList(cloneTodo);
-    });
+    //   setTodoList(newArr);
+    // });
   }, [])
 
   const getAllTodo = useCallback(async () => {
@@ -239,9 +291,19 @@ const LandingPage = () => {
       dataArr.push(doc.data())
     });
 
-    setTodoList(dataArr)
-    subscribeListener(dataArr);
+    // FIlter by status and put inside the proper status array
 
+    const completedTodoList = dataArr.filter(each => each.status === TODO_STATUS.COMPLETED);
+    setCompletedTodoList(completedTodoList)
+
+    const deletedTodoList = dataArr.filter(each => each.status === TODO_STATUS.DELETED);
+    setDeletedTodoList(deletedTodoList)
+
+    const activeTodoList = dataArr.filter(each => each.status === TODO_STATUS.ACTIVE);
+    setTodoList(activeTodoList)
+    // 
+    //  
+    subscribeListener(dataArr);
 
   }, [subscribeListener])
 
