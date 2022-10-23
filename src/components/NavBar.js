@@ -25,7 +25,7 @@ export default function NavBar() {
             TODOS
           </Typography>
           <Button color="inherit">Completed</Button>
-          <Button color="inherit">About Us</Button>
+          <Button color="inherit" href='/login'>Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
