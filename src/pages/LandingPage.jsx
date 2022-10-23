@@ -264,8 +264,6 @@ const LandingPage = () => {
   const saveToFB = async (todo) => {
 
     await setDoc(doc(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP, todo.id), todo);
-
-    alert('i saved to FB')
   }
 
   const subscribeListener = useCallback((dataArr) => {
@@ -313,6 +311,13 @@ const LandingPage = () => {
   }, [getAllTodo])
 
 
+  const saveToMerge = async (todo) => {
+    await setDoc(doc(firestore, FIREBASE_COLLECTION.ANIS_TODO_APP, 'zb237967-607f-4a57-9b17-a6808ca9f335'), { 
+      class: "react",
+      hours: "16 hour"
+    }, { merge: true });
+  }
+
   return (
     <div className='container'>
 
@@ -330,7 +335,7 @@ const LandingPage = () => {
           onKeyDownCapture={keydownTemp}
         />
         <Button 
-          onClick={saveTheTodo}
+          onClick={saveToFB}
           variant="contained" 
           size="large"
           sx={{
