@@ -10,7 +10,7 @@ import { Login } from '../pages/Login';
 const AllRoutes = () => {
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename='/'>
       <Routes>
         <Route path={routeNames.LANDING_PAGE} element={<App />}>
           <Route index element={<LandingPage />} />
