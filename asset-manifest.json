@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/react-and-firebase-nest/static/css/main.f764a840.css",
+    "main.js": "/react-and-firebase-nest/static/js/main.40f9bc89.js",
+    "static/js/787.4536719a.chunk.js": "/react-and-firebase-nest/static/js/787.4536719a.chunk.js",
+    "index.html": "/react-and-firebase-nest/index.html",
+    "main.f764a840.css.map": "/react-and-firebase-nest/static/css/main.f764a840.css.map",
+    "main.40f9bc89.js.map": "/react-and-firebase-nest/static/js/main.40f9bc89.js.map",
+    "787.4536719a.chunk.js.map": "/react-and-firebase-nest/static/js/787.4536719a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f764a840.css",
+    "static/js/main.40f9bc89.js"
+  ]
+}
